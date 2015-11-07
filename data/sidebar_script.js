@@ -33,7 +33,7 @@ addon.port.on("add_tab", function (tab) {
 	document.getElementById("tab_list").appendChild(new_tab);
 	document.getElementById("tab_list").appendChild(document.createElement("br"));
 
-	$("[id='"+tab_index+"']").click(function() {
+	$("#"+tab_index).click(function() {
 		var id=$(this).attr('id');
 		addon.port.emit("id", id);
 	});
@@ -55,7 +55,7 @@ addon.port.on("update_tab", function (tab) {
 		tab_element.appendChild(document.createTextNode(tab_title));
 	}
 
-	$("[id='"+tab_index+"']").click(function() {
+	$("#"+tab_index).click(function() {
 		var id=$(this).attr('id');
 		addon.port.emit("id", id);
 	});
