@@ -18,9 +18,9 @@ var sidebar = require("sdk/ui/sidebar").Sidebar({
 			sidebar_worker = worker;
 			list_tabs();
     	});
-		worker.port.on("id", function (id) {
-			console.log(id);
-			activate_clicked_tab(id);
+		worker.port.on("id", function (index) {
+			console.log(index);
+			activate_clicked_tab(index);
 		});
 	}
 });
@@ -60,9 +60,8 @@ function list_tabs()
 	}
 }
 
-function activate_clicked_tab(id)
+function activate_clicked_tab(index)
 {
-	var index = id.split("_")[1];
 	var tab = open_tabs[index];
 	var lowLevelTab = viewFor(tab);
 	tab_utils.activateTab(lowLevelTab)
