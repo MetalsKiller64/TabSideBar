@@ -6,6 +6,7 @@ var tab_utils = require("sdk/tabs/utils");
 var sidebar_worker = undefined;
 
 var open_tabs = {};
+var tab_ids = [];
 
 var sidebar = require("sdk/ui/sidebar").Sidebar({
 	id: 'tabbar',
@@ -18,21 +19,21 @@ var sidebar = require("sdk/ui/sidebar").Sidebar({
 			sidebar_worker = worker;
 			list_tabs();
     	});
-		worker.port.on("click", function (index) {
-			console.log(index);
-			activate_clicked_tab(index);
+		worker.port.on("click", function (id) {
+			console.log(id);
+			activate_clicked_tab(id);
 		});
 
-		worker.port.on("close", function (index) {
-			console.log("close: "+index);
-			close_tab(index);
+		worker.port.on("close", function (id) {
+			console.log("close: "+id);
+			close_tab(id);
 		})
 	}
 });
 
 tabs.on('ready', function(loaded_tab) {
 	console.log('tab is loaded', loaded_tab.title, loaded_tab.url);
-	update_tab(loaded_tab);
+	update_tab(loaded_tab, loaded_tab.access_id);
 });
 
 tabs.on('open', function (tab) {
@@ -43,9 +44,9 @@ tabs.on("close", function (tab) {
 	remove_tab(tab);
 })
 
-function close_tab(index)
+function close_tab(id)
 {
-	var tab = open_tabs[index];
+	var tab = open_tabs[id];
 	tab.close();
 }
 
@@ -53,20 +54,24 @@ function add_tab(tab)
 {
 	if (sidebar_worker != undefined)
 	{
-		open_tabs[tab.index] = tab;
-		sidebar_worker.port.emit("add_tab", {"index":tab.index, "title":tab.title});
+		new_id = tab_ids.length;
+		tab_ids.push(new_id);
+		open_tabs[new_id] = tab;
+		tab.access_id = new_id;
+		sidebar_worker.port.emit("add_tab", {"id":new_id, "title":tab.title});
 	}
 }
 
-function update_tab(tab)
+function update_tab(tab, id)
 {
-	sidebar_worker.port.emit("update_tab", {"index":tab.index, "title":tab.title});
+	open_tabs[id] = tab;
+	sidebar_worker.port.emit("update_tab", {"id":tab.access_id, "title":tab.title});
 }
 
 function remove_tab(tab)
 {
-	open_tabs[tab.index] = undefined;
-	sidebar_worker.port.emit("remove_tab", {"index":tab.index, "title":tab.title});
+	open_tabs[tab.access_id] = undefined;
+	sidebar_worker.port.emit("remove_tab", {"id":tab.access_id, "title":tab.title});
 }
 
 function list_tabs()
@@ -81,9 +86,9 @@ function list_tabs()
 	}
 }
 
-function activate_clicked_tab(index)
+function activate_clicked_tab(id)
 {
-	var tab = open_tabs[index];
+	var tab = open_tabs[id];
 	var lowLevelTab = viewFor(tab);
 	tab_utils.activateTab(lowLevelTab)
 }
