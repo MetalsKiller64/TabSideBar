@@ -18,10 +18,15 @@ var sidebar = require("sdk/ui/sidebar").Sidebar({
 			sidebar_worker = worker;
 			list_tabs();
     	});
-		worker.port.on("id", function (index) {
+		worker.port.on("click", function (index) {
 			console.log(index);
 			activate_clicked_tab(index);
 		});
+
+		worker.port.on("close", function (index) {
+			console.log("close: "+index);
+			close_tab(index);
+		})
 	}
 });
 
@@ -34,6 +39,16 @@ tabs.on('open', function (tab) {
 	add_tab(tab);
 });
 
+tabs.on("close", function (tab) {
+	remove_tab(tab);
+})
+
+function close_tab(index)
+{
+	var tab = open_tabs[index];
+	tab.close();
+}
+
 function add_tab(tab)
 {
 	if (sidebar_worker != undefined)
@@ -45,7 +60,13 @@ function add_tab(tab)
 
 function update_tab(tab)
 {
-	sidebar_worker.port.emit("update_tab", {"index":tab.index, "title":tab.title})
+	sidebar_worker.port.emit("update_tab", {"index":tab.index, "title":tab.title});
+}
+
+function remove_tab(tab)
+{
+	open_tabs[tab.index] = undefined;
+	sidebar_worker.port.emit("remove_tab", {"index":tab.index, "title":tab.title});
 }
 
 function list_tabs()

@@ -16,9 +16,12 @@ addon.port.on("add_tab", function (tab) {
 	console.log(tab)
 	tab_index = tab["index"];
 	tab_title = tab["title"];
+	var tab_container = document.createElement("span");
 	var new_tab = document.createElement("button");
-	//new_tab.onClick = "javascript:blah()";
-	new_tab.id = tab_index;
+	var close_button = document.createElement("button");
+	close_button.id = tab_index+"_close";
+	close_button.appendChild(document.createTextNode("x"));
+	tab_container.id = tab_index;
 	if (tab_title.length > 30)
 	{
 		tab_title_replacement = tab_title.substring(0, 27)+"...";
@@ -26,17 +29,23 @@ addon.port.on("add_tab", function (tab) {
 	}
 	else
 	{
-		//new_tab.innerHTML = tab_title;
 		new_tab.appendChild(document.createTextNode(tab_title));
 	}
 	open_tabs[tab_index] = new_tab;
-	document.getElementById("tab_list").appendChild(new_tab);
-	document.getElementById("tab_list").appendChild(document.createElement("br"));
+	var tab_list = document.getElementById("tab_list")
+	tab_container.appendChild(new_tab);
+	tab_container.appendChild(close_button);
+	tab_container.appendChild(document.createElement("br"));
+	tab_list.appendChild(tab_container);
 
 	$("#"+tab_index).click(function() {
 		var id=$(this).attr('id');
-		addon.port.emit("id", id);
+		addon.port.emit("click", id);
 	});
+
+	$("#"+tab_index+"_close").click(function() {
+		addon.port.emit("close", tab_index);
+	})
 });
 
 addon.port.on("update_tab", function (tab) {
@@ -60,3 +69,9 @@ addon.port.on("update_tab", function (tab) {
 		addon.port.emit("id", id);
 	});
 });
+
+addon.port.on("remove_tab", function (tab) {
+	tab_index = tab["index"];
+	tab_title = tab["title"];
+	document.getElementById("tab_list").removeChild(document.getElementById(tab_index));
+})
