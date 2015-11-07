@@ -22,11 +22,12 @@ addon.port.on("add_tab", function (tab) {
 	if (tab_title.length > 30)
 	{
 		tab_title_replacement = tab_title.substring(0, 27)+"...";
-		new_tab.innerHTML = tab_title_replacement;
+		new_tab.appendChild(document.createTextNode(tab_title_replacement));
 	}
 	else
 	{
-		new_tab.innerHTML = tab_title;
+		//new_tab.innerHTML = tab_title;
+		new_tab.appendChild(document.createTextNode(tab_title));
 	}
 	open_tabs[tab_index] = new_tab;
 	document.getElementById("tab_list").appendChild(new_tab);
@@ -47,11 +48,11 @@ addon.port.on("update_tab", function (tab) {
 	if (tab_title.length > 30)
 	{
 		tab_title_replacement = tab_title.substring(0, 27)+"...";
-		tab_element.innerHTML = tab_title_replacement;
+		tab_element.appendChild(document.createTextNode(tab_title_replacement));
 	}
 	else
 	{
-		tab_element.innerHTML = tab_title;
+		tab_element.appendChild(document.createTextNode(tab_title));
 	}
 
 	$("[id='"+tab_title+"_"+tab_index+"']").click(function() {
