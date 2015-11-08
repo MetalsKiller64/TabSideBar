@@ -6,7 +6,7 @@ addon.port.on("pong", function() {
 	open_tabs = {};
 });
 
-addon.port.on("clicked", function (id) {
+addon.port.on("highlight", function (id) {
 	highlight(id);
 })
 
@@ -20,7 +20,7 @@ function highlight(id) {
 		current_active_tab.style.background = "";
 	}
 
-	current_active_tab  = document.getElementById(id+"_activate");
+	current_active_tab = document.getElementById(id+"_activate");
 	current_active_tab.style.background = "#9DACFF"; //rgb(157,172,255)
 }
 
@@ -29,6 +29,7 @@ addon.port.on("add_tab", function (tab) {
 	var tab_id = tab["id"];
 	var tab_title = tab["title"];
 	var subsequent_tab = tab["sub_tab"];
+	var highlight_as_current = tab["highlight"];
 
 	var tab_container = document.createElement("span");
 	tab_container.id = tab_id;
@@ -85,6 +86,11 @@ addon.port.on("add_tab", function (tab) {
 		var id=$(this).attr('id').split("_")[0];
 		addon.port.emit("close", id);
 	})
+
+	if (highlight_as_current != undefined)
+	{
+		highlight(highlight_as_current);
+	}
 });
 
 addon.port.on("update_tab", function (tab) {
@@ -126,6 +132,8 @@ addon.port.on("update_tab", function (tab) {
 		var id=$(this).attr('id').split("_")[0];
 		addon.port.emit("close", id);
 	});
+
+	//highlight(tab_id);
 });
 
 addon.port.on("remove_tab", function (tab) {
