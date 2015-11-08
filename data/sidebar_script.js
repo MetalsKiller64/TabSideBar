@@ -27,6 +27,7 @@ addon.port.on("add_tab", function (tab) {
 	tab_icon.style.width = '15px';
 
 	var new_tab = document.createElement("button");
+	new_tab.id = tab_id+"_activate";
 	
 	var title_node = document.createElement("span");
 	title_node.id = tab_id+"_title";
@@ -54,13 +55,14 @@ addon.port.on("add_tab", function (tab) {
 	tab_container.appendChild(document.createElement("br"));
 	tab_list.append(tab_container);
 
-	$("#"+tab_id).click(function() {
-		var id=$(this).attr('id');
+	$("#"+tab_id+"_activate").click(function() {
+		var id=$(this).attr('id').split("_")[0];
 		addon.port.emit("click", id);
 	});
 
 	$("#"+tab_id+"_close").click(function() {
-		addon.port.emit("close", tab_id);
+		var id=$(this).attr('id').split("_")[0];
+		addon.port.emit("close", id);
 	})
 });
 
@@ -69,7 +71,6 @@ addon.port.on("update_tab", function (tab) {
 	tab_title = tab["title"];
 
 	var tab_element = open_tabs[tab_id]["tab_element"];
-	tab_element.id = tab_id;
 	
 	var tab_icon = open_tabs[tab_id]["icon"];
 	var old_icon_src = tab_icon.src;
@@ -95,14 +96,20 @@ addon.port.on("update_tab", function (tab) {
 	}
 
 	tab_element.replaceChild(new_title_node, old_title_node);
-	$("#"+tab_id).click(function() {
-		var id=$(this).attr('id');
-		addon.port.emit("id", id);
+	$("#"+tab_id+"_activate").click(function() {
+		var id=$(this).attr('id').split("_")[0];
+		addon.port.emit("click", id);
+	});
+
+	$("#"+tab_id+"_close").click(function() {
+		var id=$(this).attr('id').split("_")[0];
+		addon.port.emit("close", id);
 	});
 });
 
 addon.port.on("remove_tab", function (tab) {
 	tab_id = tab["id"];
 	tab_title = tab["title"];
+	open_tabs[tab_id] = undefined;
 	document.getElementById("tab_list").removeChild(document.getElementById(tab_id));
 })
