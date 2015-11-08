@@ -27,6 +27,7 @@ var sidebar = require("sdk/ui/sidebar").Sidebar({
     	});
 		worker.port.on("click", function (id) {
 			activate_clicked_tab(id);
+			worker.port.emit("clicked", id);
 		});
 
 		worker.port.on("close", function (id) {
