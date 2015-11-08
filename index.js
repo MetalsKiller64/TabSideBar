@@ -20,6 +20,8 @@ var sidebar = require("sdk/ui/sidebar").Sidebar({
 	url: data.url("sidebar_content.html"),
 	contentScriptFile: [data.url("jquery.min.js")],
 	onAttach: function (worker) {
+		open_tabs = {};
+		tab_ids = [];
 		worker.port.on("ping", function() {
 			worker.port.emit("pong");
 			sidebar_worker = worker;

@@ -3,6 +3,7 @@ addon.port.emit("ping");
 
 addon.port.on("pong", function() {
 	console.log("sidebar script got the reply");
+	open_tabs = {};
 });
 
 addon.port.on("clicked", function (id) {
