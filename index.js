@@ -36,15 +36,27 @@ var sidebar = require("sdk/ui/sidebar").Sidebar({
 });
 
 tabs.on('ready', function(loaded_tab) {
+	if (sidebar_worker == undefined)
+	{
+		return;
+	}
 	update_tab(loaded_tab, loaded_tab.access_id);
 });
 
 tabs.on('open', function (tab) {
+	if (sidebar_worker == undefined)
+	{
+		return;
+	}
 	move_tab_next_to_active(tab);
 	add_tab(tab);
 });
 
 tabs.on("close", function (tab) {
+	if (sidebar_worker == undefined)
+	{
+		return;
+	}
 	remove_tab(tab);
 })
 
