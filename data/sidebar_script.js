@@ -9,8 +9,10 @@ var open_tabs = {};
 
 addon.port.on("add_tab", function (tab) {
 	console.log(tab)
-	tab_id = tab["id"];
-	tab_title = tab["title"];
+	var tab_id = tab["id"];
+	var tab_title = tab["title"];
+	var subsequent_tab = tab["sub_tab"];
+
 	var tab_container = document.createElement("span");
 	tab_container.id = tab_id;
 	
@@ -47,7 +49,15 @@ addon.port.on("add_tab", function (tab) {
 	tab_container.appendChild(new_tab);
 	tab_container.appendChild(close_button);
 	tab_container.appendChild(document.createElement("br"));
-	tab_list.append(tab_container);
+	if (subsequent_tab != undefined)
+	{
+		//tab_list.insertBefore(tab_container, document.getElementById(subsequent_tab));
+		$("#"+subsequent_tab).before(tab_container);
+	}
+	else
+	{
+		tab_list.append(tab_container);
+	}
 
 	$("#"+tab_id+"_activate").click(function() {
 		var id=$(this).attr('id').split("_")[0];
