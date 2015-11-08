@@ -1,13 +1,15 @@
-//TODO: drag & drop?
 //TODO: baumstruktur?
+//TODO: drag & drop?
 //FIXME: tab-titel werden nicht aktualisiert wenn man auf "zurück" klickt
-//TODO: aktiven tab hervorheben
+//FIXME: tab titel aktualisierung funktioniert nicht immer z.B. bei aktualisierung von suchmaschinen ergebnissen
+//FIXME: tab icons gehen beim reload kaputt
 
 var tabs = require("sdk/tabs");
 var { viewFor } = require("sdk/view/core");
 var data = require("sdk/self").data;
 var tab_utils = require("sdk/tabs/utils");
 let { getFavicon } = require("sdk/places/favicon");
+var preferences = require("sdk/simple-prefs").prefs;
 
 var sidebar_worker = undefined;
 
@@ -38,6 +40,11 @@ var sidebar = require("sdk/ui/sidebar").Sidebar({
 		})
 	}
 });
+
+if (preferences["show_after_startup"] == true)
+{
+	sidebar.show();
+}
 
 
 function highlight_tab(tab_id)
