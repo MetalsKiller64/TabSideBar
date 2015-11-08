@@ -17,13 +17,24 @@ addon.port.on("add_tab", function (tab) {
 	tab_id = tab["id"];
 	tab_title = tab["title"];
 	var tab_container = document.createElement("span");
+	tab_container.id = tab_id;
+	
+	var tab_icon = document.createElement("img");
+	console.log("ICON: "+tab["icon"]);
+	tab_icon.id = tab_id+"_icon";
+	tab_icon.src = tab["icon"];
+	tab_icon.style.height = '15px';
+	tab_icon.style.width = '15px';
+
 	var new_tab = document.createElement("button");
+	
 	var title_node = document.createElement("span");
 	title_node.id = tab_id+"_title";
+	
 	var close_button = document.createElement("button");
 	close_button.id = tab_id+"_close";
 	close_button.appendChild(document.createTextNode("x"));
-	tab_container.id = tab_id;
+
 	if (tab_title.length > 30)
 	{
 		tab_title_replacement = tab_title.substring(0, 27)+"...";
@@ -33,9 +44,11 @@ addon.port.on("add_tab", function (tab) {
 	{
 		title_node.appendChild(document.createTextNode(tab_title));
 	}
-	open_tabs[tab_id] = new_tab;
+
+	open_tabs[tab_id] = {"tab_element":new_tab, "icon":tab_icon};
 	var tab_list = $("#tab_list")
 	new_tab.appendChild(title_node);
+	tab_container.appendChild(tab_icon);
 	tab_container.appendChild(new_tab);
 	tab_container.appendChild(close_button);
 	tab_container.appendChild(document.createElement("br"));
@@ -54,8 +67,18 @@ addon.port.on("add_tab", function (tab) {
 addon.port.on("update_tab", function (tab) {
 	tab_id = tab["id"];
 	tab_title = tab["title"];
-	var tab_element = open_tabs[tab_id];
+
+	var tab_element = open_tabs[tab_id]["tab_element"];
 	tab_element.id = tab_id;
+	
+	var tab_icon = open_tabs[tab_id]["icon"];
+	var old_icon_src = tab_icon.src;
+	var new_icon_src = tab["icon"];
+	if (old_icon_src != new_icon_src)
+	{
+		tab_icon.src = new_icon_src;
+	}
+
 	var old_title_node = document.getElementById(tab_id+"_title");
 	old_title_node.id = "old";
 	var new_title_node = document.createElement("span");
