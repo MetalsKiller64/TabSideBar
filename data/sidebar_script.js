@@ -5,11 +5,6 @@ addon.port.on("pong", function() {
 	console.log("sidebar script got the reply");
 });
 
-function blah()
-{
-	console.log("blah");
-}
-
 var open_tabs = {};
 
 addon.port.on("add_tab", function (tab) {
@@ -20,7 +15,6 @@ addon.port.on("add_tab", function (tab) {
 	tab_container.id = tab_id;
 	
 	var tab_icon = document.createElement("img");
-	console.log("ICON: "+tab["icon"]);
 	tab_icon.id = tab_id+"_icon";
 	tab_icon.src = tab["icon"];
 	tab_icon.style.height = '15px';
