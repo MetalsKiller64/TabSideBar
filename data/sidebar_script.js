@@ -48,7 +48,7 @@ addon.port.on("add_tab", function (tab) {
 			}
 			else
 			{
-				var indentation = (parseInt(parent_indentation.substring(0,2)) * 2);
+				var indentation = ((parseInt(parent_indentation.substring(0,1)) + 1).toString() + "0");
 				console.log("indentation: "+indentation);
 				tab_container.style = "margin-left: "+indentation+"px;";
 			}
