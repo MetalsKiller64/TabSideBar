@@ -33,6 +33,27 @@ addon.port.on("add_tab", function (tab) {
 
 	var tab_container = document.createElement("span");
 	tab_container.id = tab_id;
+	if (tab["parent"] != undefined)
+	{
+		if (document.getElementById(tab["parent"]) == undefined)
+		{
+			console.log("parent is not ready yet");
+		}
+		else
+		{
+			var parent_indentation = document.getElementById(tab["parent"]).style["margin-left"];
+			if (parent_indentation == "")
+			{
+				tab_container.style = "margin-left: 10px;";
+			}
+			else
+			{
+				var indentation = (parseInt(parent_indentation.substring(0,2)) * 2);
+				console.log("indentation: "+indentation);
+				tab_container.style = "margin-left: "+indentation+"px;";
+			}
+		}
+	}
 	
 	var tab_icon = document.createElement("img");
 	tab_icon.id = tab_id+"_icon";

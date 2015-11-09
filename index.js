@@ -10,21 +10,47 @@ var data = require("sdk/self").data;
 var tab_utils = require("sdk/tabs/utils");
 let { getFavicon } = require("sdk/places/favicon");
 var preferences = require("sdk/simple-prefs").prefs;
+var store = require("sdk/simple-storage");
 
 var sidebar_worker = undefined;
 
 var open_tabs = {};
 var tab_ids = [];
+var restored_tabs = undefined;
 var triggered_events_at_once = 0;
+
+function store_tab_infos()
+{
+	var tab_references = {};
+	for (let tab of tabs)
+	{
+		tab_references[tab.index] = {"access_id":tab.access_id, "parent":tab.parent_id};
+	}
+	store.storage.tab_references = tab_references;
+	console.log(tab_references);
+}
+
+exports.onUnload = function (reason) {
+	store_tab_infos();
+};
 
 var sidebar = require("sdk/ui/sidebar").Sidebar({
 	id: 'tabbar',
 	title: 'TabSideBar',
 	url: data.url("sidebar_content.html"),
 	contentScriptFile: [data.url("jquery.min.js")],
+	onHide: function () {
+		console.log("hiding");
+		store_tab_infos();
+	},
 	onAttach: function (worker) {
 		open_tabs = {};
 		tab_ids = [];
+		if (store.storage.tab_references != undefined)
+		{
+			console.log("restore tab relations: "+store.storage.tab_references);
+			restored_tabs = store.storage.tab_references;
+		}
 		worker.port.on("ping", function() {
 			worker.port.emit("pong");
 			sidebar_worker = worker;
@@ -69,14 +95,23 @@ tabs.on('open', function (tab) {
 	triggered_events_at_once = 1
 	console.log("EVENT: open");
 	move_tab_next_to_active(tab);
+	var parent_tab = tabs.activeTab;
 
 	//wenn der neue tab leer ist
 	if (tab.readyState == "complete")
 	{
+		if (parent_tab.parent_id != undefined)
+		{
+			tab.parent_id = parent_tab.parent_id;
+		}
 		add_tab(tab, "inserted");
 	}
 	else
 	{
+		if (parent_tab.access_id != undefined)
+		{
+			tab.parent_id = parent_tab.access_id;
+		}
 		add_tab(tab, undefined);
 	}
 });
@@ -115,47 +150,56 @@ function close_tab(id)
 
 function add_tab(tab, highlight)
 {
-	if (sidebar_worker != undefined)
+	if (sidebar_worker == undefined)
 	{
-		new_id = tab_ids.length;
-		tab_ids.push(new_id);
-		open_tabs[new_id] = tab;
-		tab.access_id = new_id;
-		var subsequent_tab = undefined;
-
-		for (let open_tab of tabs)
-		{
-			tab_access_id = open_tab.access_id;
-			if (open_tab.index == (tab.index + 1))
-			{
-				subsequent_tab = tab_access_id;
-			}
-		}
-		tab.highlight = undefined;
-
-		if (highlight != undefined)
-		{
-			if (highlight == "inserted")
-			{
-				tab.highlight = tab.access_id;
-			}
-			else
-			{
-				tab.highlight = tabs.activeTab.access_id;
-			}
-		}
-
-		getFavicon(tab, function (url) {
-			if (url == null)
-			{
-				sidebar_worker.port.emit("add_tab", {"id":tab.access_id, "title":tab.title, "sub_tab":subsequent_tab, "highlight":tab.highlight});
-			}
-			else
-			{
-				sidebar_worker.port.emit("add_tab", {"id":tab.access_id, "title":tab.title, "icon":url, "sub_tab":subsequent_tab, "highlight":tab.highlight});
-			}
-		});
+		return;
 	}
+
+	new_id = tab_ids.length;
+	tab_ids.push(new_id);
+	open_tabs[new_id] = tab;
+	tab.access_id = new_id;
+	var subsequent_tab = undefined;
+
+	console.log("RESTORED: "+tab.was_restored);
+	if (tab.was_restored == true)
+	{
+		tab.parent_id = restored_tabs[tab.index]["parent"];
+	}
+
+	for (let open_tab of tabs)
+	{
+		tab_access_id = open_tab.access_id;
+		if (open_tab.index == (tab.index + 1))
+		{
+			subsequent_tab = tab_access_id;
+		}
+	}
+	tab.highlight = undefined;
+	console.log("parent: "+tab.parent_id);
+
+	if (highlight != undefined)
+	{
+		if (highlight == "inserted")
+		{
+			tab.highlight = tab.access_id;
+		}
+		else
+		{
+			tab.highlight = tabs.activeTab.access_id;
+		}
+	}
+
+	getFavicon(tab, function (url) {
+		if (url == null)
+		{
+			sidebar_worker.port.emit("add_tab", {"id":tab.access_id, "title":tab.title, "sub_tab":subsequent_tab, "highlight":tab.highlight, "parent":tab.parent_id});
+		}
+		else
+		{
+			sidebar_worker.port.emit("add_tab", {"id":tab.access_id, "title":tab.title, "icon":url, "sub_tab":subsequent_tab, "highlight":tab.highlight, "parent":tab.parent_id});
+		}
+	});
 }
 
 function update_tab(tab, id)
@@ -185,6 +229,14 @@ function list_tabs()
 	var added_tabs_count = 1;
 	for (let tab of tabs)
 	{
+		if (restored_tabs != undefined)
+		{
+			if (restored_tabs[tab.index] != undefined)
+			{
+				tab.was_restored = true;
+			}
+		}
+
 		if (open_tabs_count == added_tabs_count)
 		{
 			add_tab(tab, "highlight");
