@@ -17,11 +17,11 @@ var current_active_tab = null;
 function highlight(id) {
 	if(current_active_tab != null)
 	{
-		current_active_tab.style.background = "";
+		current_active_tab.className = "";
 	}
 
 	current_active_tab = document.getElementById(id+"_activate");
-	current_active_tab.style.background = "#9DACFF"; //rgb(157,172,255)
+	current_active_tab.className = "highlighted"
 }
 
 addon.port.on("add_tab", function (tab) {
