@@ -33,6 +33,7 @@ addon.port.on("add_tab", function (tab) {
 
 	var tab_container = document.createElement("span");
 	tab_container.id = tab_id;
+	tab_container.className = "tab";
 	if (tab["parent"] != undefined)
 	{
 		if (document.getElementById(tab["parent"]) == undefined)

@@ -1,1 +1,13 @@
-button.highlighted { background:#9DACFF; }
+button.highlighted {
+	background: #9DACFF;
+	display: inline-block;
+	white-space: normal;
+}
+
+span.tab_list {
+	overflow-x: scroll;
+}
+span.tab {
+	display: inline-block;
+	white-space: nowrap;
+}
