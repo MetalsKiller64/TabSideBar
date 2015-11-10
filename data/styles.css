@@ -1,0 +1,83 @@
+
+span.tab_list {
+	overflow-x: auto;
+	/*display: block;
+	white-space: nowrap;*/
+}
+
+img.icon {
+	width: 15px;
+	height: 15px;
+	vertical-align: middle;
+	margin-right: 5%;
+	margin-left: 1%;
+	position: absolute;
+	left: 0;
+}
+
+span.close_highlighted:hover {
+	background: #0DDC0F;
+	width: 15px;
+	height: 15px;
+	vertical-align: middle;
+	margin-right: 1%;
+	margin-left: 5%;
+	white-space: nowrap;
+}
+
+span.close_highlighted {
+	background: #9DACFF;
+	width: 15px;
+	height: 15px;
+	vertical-align: middle;
+	margin-right: 1%;
+	margin-left: 5%;
+	white-space: nowrap;
+	/*position: absolute;
+	right: 0;*/
+}
+
+span.close:hover {
+	background: #0DDC0F;
+	width: 15px;
+	height: 15px;
+	vertical-align: middle;
+	margin-right: 1%;
+	margin-left: 5%;
+	white-space: nowrap;
+	/*position: absolute;
+	right: 0;*/
+}
+
+span.close {
+	width: 15px;
+	height: 15px;
+	vertical-align: middle;
+	margin-right: 1%;
+	margin-left: 5%;
+	white-space: nowrap;
+	position: absolute;
+	right: ;
+}
+
+span.highlighted {
+	background: #9DACFF;
+	width: 100%;
+	position: relative;
+	display: block;
+	white-space: nowrap;
+	text-align: center;
+	-moz-user-select: none;
+	cursor: default;
+}
+
+span.normal {
+	background: #E6EAE7;
+	position: relative;
+	width: 100%;
+	display: block;
+	white-space: nowrap;
+	text-align: center;
+	-moz-user-select: none;
+	cursor: default;
+}
