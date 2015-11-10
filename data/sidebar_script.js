@@ -96,8 +96,8 @@ addon.port.on("add_tab", function (tab) {
 		tab_list.append(tab_container);
 	}
 
-	$("#"+tab_id+"_activate").click(function() {
-		var id=$(this).attr('id').split("_")[0];
+	$("#"+tab_id).click(function() {
+		var id=$(this).attr('id');
 		addon.port.emit("click", id);
 	});
 
