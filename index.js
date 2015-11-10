@@ -55,7 +55,7 @@ var sidebar = require("sdk/ui/sidebar").Sidebar({
 			worker.port.emit("pong");
 			sidebar_worker = worker;
 			list_tabs();
-    	});
+		});
 		worker.port.on("click", function (id) {
 			activate_clicked_tab(id);
 			highlight_tab(id);
