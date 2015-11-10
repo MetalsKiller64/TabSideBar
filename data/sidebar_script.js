@@ -33,7 +33,8 @@ addon.port.on("add_tab", function (tab) {
 
 	var tab_container = document.createElement("span");
 	tab_container.id = tab_id;
-	tab_container.className = "tab";
+	tab_container.className = "normal";
+
 	if (tab["parent"] != undefined)
 	{
 		if (document.getElementById(tab["parent"]) == undefined)
@@ -59,8 +60,7 @@ addon.port.on("add_tab", function (tab) {
 	var tab_icon = document.createElement("img");
 	tab_icon.id = tab_id+"_icon";
 	tab_icon.src = tab["icon"];
-	tab_icon.style.height = '15px';
-	tab_icon.style.width = '15px';
+	tab_icon.className = "icon";
 
 	var new_tab = document.createElement("button");
 	new_tab.id = tab_id+"_activate";
@@ -68,8 +68,9 @@ addon.port.on("add_tab", function (tab) {
 	var title_node = document.createElement("span");
 	title_node.id = tab_id+"_title";
 	
-	var close_button = document.createElement("button");
+	var close_button = document.createElement("span");
 	close_button.id = tab_id+"_close";
+	close_button.className = "close";
 	close_button.appendChild(document.createTextNode("x"));
 
 	if (tab_title.length > 30)
