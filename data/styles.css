@@ -69,6 +69,7 @@ span.highlighted {
 	text-align: center;
 	-moz-user-select: none;
 	cursor: default;
+	float: right;
 }
 
 span.normal {
@@ -80,4 +81,5 @@ span.normal {
 	text-align: center;
 	-moz-user-select: none;
 	cursor: default;
+	float: right;
 }

@@ -53,16 +53,19 @@ addon.port.on("add_tab", function (tab) {
 		}
 		else
 		{
-			var parent_indentation = document.getElementById(tab["parent"]).style["margin-left"];
+			//var parent_indentation = document.getElementById(tab["parent"]).style["margin-left"];
+			var parent_indentation = document.getElementById(tab["parent"]).style["width"].substring(0,2);
 			if (parent_indentation == "")
 			{
-				tab_container.style = "margin-left: 10px;";
+				tab_container.style = "width: 98%";
 			}
 			else
 			{
-				var indentation = ((parseInt(parent_indentation.substring(0,1)) + 1).toString() + "0");
+				//var indentation = ((parseInt(parent_indentation.substring(0,1)) + 1).toString() + "0");
+				var indentation = (parseInt(parent_indentation) - 2);
 				console.log("indentation: "+indentation);
-				tab_container.style = "margin-left: "+indentation+"px;";
+				tab_container.style = "width: "+indentation+"%;";
+				//tab_container.style = "margin-left: "+indentation+"px;";
 			}
 		}
 	}
