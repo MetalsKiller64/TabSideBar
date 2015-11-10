@@ -61,9 +61,6 @@ addon.port.on("add_tab", function (tab) {
 	tab_icon.id = tab_id+"_icon";
 	tab_icon.src = tab["icon"];
 	tab_icon.className = "icon";
-
-	var new_tab = document.createElement("button");
-	new_tab.id = tab_id+"_activate";
 	
 	var title_node = document.createElement("span");
 	title_node.id = tab_id+"_title";
@@ -83,11 +80,10 @@ addon.port.on("add_tab", function (tab) {
 		title_node.appendChild(document.createTextNode(tab_title));
 	}
 
-	open_tabs[tab_id] = {"tab_element":new_tab, "icon":tab_icon};
+	open_tabs[tab_id] = {"tab_element":tab_container, "icon":tab_icon};
 	var tab_list = $("#tab_list")
-	new_tab.appendChild(title_node);
 	tab_container.appendChild(tab_icon);
-	tab_container.appendChild(new_tab);
+	tab_container.appendChild(title_node);
 	tab_container.appendChild(close_button);
 	tab_container.appendChild(document.createElement("br"));
 	if (subsequent_tab != undefined)
