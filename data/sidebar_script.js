@@ -13,15 +13,25 @@ addon.port.on("highlight", function (id) {
 var open_tabs = {};
 
 var current_active_tab = null;
+var current_active_close = null;
 
 function highlight(id) {
 	if(current_active_tab != null)
 	{
-		current_active_tab.className = "";
+		current_active_tab.removeClass("highlighted")
+		current_active_tab.addClass("normal");
+
+		current_active_close.removeClass("close_highlighted");
+		current_active_close.addClass("close");
 	}
 
-	current_active_tab = document.getElementById(id+"_activate");
-	current_active_tab.className = "highlighted"
+	current_active_tab = $("#"+id);
+	current_active_tab.removeClass("normal");
+	current_active_tab.addClass("highlighted");
+
+	current_active_close = $("#"+id+"_close");
+	current_active_close.removeClass("close");
+	current_active_close.addClass("close_highlighted");
 }
 
 addon.port.on("add_tab", function (tab) {
