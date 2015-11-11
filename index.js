@@ -208,50 +208,55 @@ function close_tab(id)
 	tab.close();
 }
 
-function add_tab(tab, highlight)
+function add_tab(tab, type)
 {
 	if (sidebar_worker == undefined)
 	{
 		return;
 	}
 
-	new_id = tab_ids.length;
-	tab_ids.push(new_id);
-	open_tabs[new_id] = tab;
-	tab.access_id = new_id;
-	var subsequent_tab = undefined;
-
-	console.log("RESTORED: "+tab.was_restored);
-	if (tab.was_restored == true)
+	if (type == "new")
 	{
-		tab.parent_id = restored_tabs[tab.index]["parent"];
-	}
+		new_id = tab_ids.length;
+		tab_ids.push(new_id);
+		open_tabs[new_id] = tab;
+		tab.access_id = new_id;
 
-	for (let open_tab of tabs)
-	{
-		tab_access_id = open_tab.access_id;
-		if (open_tab.index == (tab.index + 1))
+		var parent_tab = tabs.activeTab;
+		var parent_tab_parent_id = tree[parent_tab.access_id]["parent"];
+
+		//TODO: das vielleicht mit nem eventhandler für strg+n?
+		//wenn der neue tab leer ist
+		if (tab.readyState == "complete")
 		{
-			subsequent_tab = tab_access_id;
-		}
-	}
-	tab.highlight = undefined;
-	console.log("parent: "+tab.parent_id);
-
-	if (highlight != undefined)
-	{
-		if (highlight == "inserted")
-		{
-			tab.highlight = tab.access_id;
+			if (parent_tab_parent_id == null)
+			{
+				add_to_tree(tab.access_id, [], null);
+			}
+			else
+			{
+				add_to_tree(tab.access_id, [], parent_tab_parent_id);
+			}
 		}
 		else
 		{
-			tab.highlight = tabs.activeTab.access_id;
+			add_to_tree(tab.access_id, [], parent_tab.access_id);
+		}
+
+		var subsequent_tab = undefined;
+
+		for (let open_tab of tabs)
+		{
+			var tab_access_id = open_tab.access_id;
+			if (open_tab.index == (tab.index + 1))
+			{
+				subsequent_tab = tab_access_id;
+			}
 		}
 	}
 
 	getFavicon(tab, function (url) {
-		var tab_object = {"id":tab.access_id, "title":tab.title, "sub_tab":subsequent_tab, "width":tab.width}
+		var tab_object = {"id":tab.access_id, "title":tab.title, "sub_tab":subsequent_tab, "indentation_level": tree[tab.access_id]["indentation_level"]};
 		if (url == null)
 		{
 			sidebar_worker.port.emit("add_tab", tab_object);
