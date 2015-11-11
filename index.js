@@ -211,7 +211,7 @@ function update_tab(tab, id)
 		var tab_object = {"id":tab.access_id, "title":tab.title};
 		if (url == null)
 		{
-			sidebar_worker.port.emit("update_tab", );
+			sidebar_worker.port.emit("update_tab", tab_object);
 		}
 		else
 		{
