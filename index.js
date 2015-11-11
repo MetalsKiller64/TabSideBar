@@ -212,6 +212,14 @@ tabs.on("close", function (tab) {
 function close_tab(id)
 {
 	var tab = open_tabs[id];
+	for (let open_tab of tabs)
+	{
+		if (tab.access_id == id)
+		{
+			tab = open_tab;
+		}
+	}
+	remove_from_tree(tab.access_id);
 	tab.close();
 }
 
