@@ -296,26 +296,45 @@ function list_tabs()
 {
 	var open_tabs_count = tabs.length;
 	var added_tabs_count = 1;
+	var first_tab = undefined;
 	for (let tab of tabs)
 	{
-		if (restored_tabs != undefined)
+		/*if (restored_tabs != undefined)
 		{
+			console.log("restore")
 			if (restored_tabs[tab.index] != undefined)
 			{
-				tab.was_restored = true;
+				var restored_tab = restored_tabs[tab.index]
+				tab.parent_id = restored_tab["parent"];
+				tab.width = restored_tab["width"];
+				tab.access_id = restored_tab["access_id"];
+				tab_ids.push(tab.access_id);
+				open_tabs[tab.access_id] = tab;
 			}
-		}
+		}*/
 
-		if (open_tabs_count == added_tabs_count)
+		if (tab.access_id == undefined)
 		{
-			add_tab(tab, "highlight");
+			new_id = tab_ids.length;
+			tab_ids.push(new_id);
+			open_tabs[new_id] = tab;
+			tab.access_id = new_id;
+		}
+		if (added_tabs_count == 1)
+		{
+			first_tab = tab;
+			if (!(tab.access_id in tree))
+			{
+				add_to_tree(tab.access_id, [], null);
+			}
 		}
 		else
 		{
-			add_tab(tab, undefined)
+			tabs_to_add.push(tab.access_id);
 		}
-		added_tabs_count = (added_tabs_count + 1)
+		added_tabs_count = (added_tabs_count + 1);
 	}
+	add_tab(first_tab, "first");
 }
 
 function activate_clicked_tab(id)
