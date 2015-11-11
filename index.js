@@ -16,8 +16,11 @@ var sidebar_worker = undefined;
 
 var open_tabs = {};
 var tab_ids = [];
+var tabs_to_add = [];
 var restored_tabs = undefined;
 var triggered_events_at_once = 0;
+
+var tree = {};
 
 function store_tab_infos()
 {
@@ -76,6 +79,63 @@ if (preferences["show_after_startup"] == true)
 function highlight_tab(tab_id)
 {
 	sidebar_worker.port.emit("highlight", tab_id);
+}
+
+function add_to_tree(tab_id, children, parent_id)
+{
+	console.log("tree:");
+	for (key in tree)
+	{
+		console.log(key)
+		console.log(tree[key]);
+	}
+
+	tree[tab_id] = {"children": children, "parent":parent_id, "indentation_level":0};
+	if (parent_id != null)
+	{
+		tree[tab_id]["indentation_level"] = (tree[parent_id]["indentation_level"] + 1);
+		tree[parent_id]["children"].unshift(tab_id);
+	}
+	
+	console.log("tree:");
+	for (key in tree)
+	{
+		console.log(key)
+		console.log(tree[key]);
+	}
+}
+
+function remove_from_tree(tab_id, parent_id)
+{
+	console.log("tree:");
+	for (key in tree)
+	{
+		console.log(key)
+		console.log(tree[key]);
+	}
+
+	var index = tree.indexOf(tab_id);
+	tree[parent_id]["children"].splice(index, 1)
+	var new_parent = tree[parent_id]["children"][0];
+	var new_children = tree[new_parent]["children"]
+	var content = tree[tab_id];
+	var old_children = content["children"];
+	if (new_children.length != 0)
+	{
+		//TODO: einrückung der kinder rekursiv um 1 erhöhen
+		content["children"] = new_children.push.apply(old_children);
+	}
+	tree[new_parent] = content;
+	var old_indentation_level = tree[new_parent]["indentation_level"];
+	tree[new_parent]["indentation_level"] = (old_indentation_level + 1);
+	tree[tab_id] = undefined;
+
+	console.log("tree:");
+	for (key in tree)
+	{
+		console.log(key)
+		console.log(tree[key]);
+	}
 }
 
 tabs.on('ready', function(loaded_tab) {
