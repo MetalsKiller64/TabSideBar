@@ -177,28 +177,10 @@ tabs.on('open', function (tab) {
 	{
 		return;
 	}
-	triggered_events_at_once = 1
+	triggered_events_at_once = 1;
 	console.log("EVENT: open");
 	move_tab_next_to_active(tab);
-	var parent_tab = tabs.activeTab;
-
-	//wenn der neue tab leer ist
-	if (tab.readyState == "complete")
-	{
-		if (parent_tab.parent_id != undefined)
-		{
-			tab.parent_id = parent_tab.parent_id;
-		}
-		add_tab(tab, "inserted");
-	}
-	else
-	{
-		if (parent_tab.access_id != undefined)
-		{
-			tab.parent_id = parent_tab.access_id;
-		}
-		add_tab(tab, undefined);
-	}
+	add_tab(tab, "new");
 });
 
 tabs.on("activate", function (tab) {
