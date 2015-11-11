@@ -191,13 +191,15 @@ function add_tab(tab, highlight)
 	}
 
 	getFavicon(tab, function (url) {
+		var tab_object = {"id":tab.access_id, "title":tab.title, "sub_tab":subsequent_tab, "width":tab.width}
 		if (url == null)
 		{
-			sidebar_worker.port.emit("add_tab", {"id":tab.access_id, "title":tab.title, "sub_tab":subsequent_tab, "highlight":tab.highlight, "parent":tab.parent_id});
+			sidebar_worker.port.emit("add_tab", tab_object);
 		}
 		else
 		{
-			sidebar_worker.port.emit("add_tab", {"id":tab.access_id, "title":tab.title, "icon":url, "sub_tab":subsequent_tab, "highlight":tab.highlight, "parent":tab.parent_id});
+			tab_object["icon"] = url;
+			sidebar_worker.port.emit("add_tab", tab_object);
 		}
 	});
 }
@@ -206,13 +208,15 @@ function update_tab(tab, id)
 {
 	open_tabs[id] = tab;
 	getFavicon(tab, function (url) {
+		var tab_object = {"id":tab.access_id, "title":tab.title};
 		if (url == null)
 		{
-			sidebar_worker.port.emit("update_tab", {"id":tab.access_id, "title":tab.title});
+			sidebar_worker.port.emit("update_tab", );
 		}
 		else
 		{
-			sidebar_worker.port.emit("update_tab", {"id":tab.access_id, "title":tab.title, "icon":url});
+			tab_object["icon"] = url;
+			sidebar_worker.port.emit("update_tab", tab_object);
 		}
 	});
 }
