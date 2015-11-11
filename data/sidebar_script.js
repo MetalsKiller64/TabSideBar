@@ -77,21 +77,14 @@ addon.port.on("add_tab", function (tab) {
 	
 	var title_node = document.createElement("span");
 	title_node.id = tab_id+"_title";
+	title_node.className = "title";
 	
 	var close_button = document.createElement("span");
 	close_button.id = tab_id+"_close";
 	close_button.className = "close";
 	close_button.appendChild(document.createTextNode("x"));
 
-	if (tab_title.length > 30)
-	{
-		tab_title_replacement = tab_title.substring(0, 27)+"...";
-		title_node.appendChild(document.createTextNode(tab_title_replacement));
-	}
-	else
-	{
-		title_node.appendChild(document.createTextNode(tab_title));
-	}
+	title_node.appendChild(document.createTextNode(tab_title));
 
 	open_tabs[tab_id] = {"tab_element":tab_container, "icon":tab_icon};
 	var tab_list = $("#tab_list")
@@ -143,16 +136,9 @@ addon.port.on("update_tab", function (tab) {
 	old_title_node.id = "old";
 	var new_title_node = document.createElement("span");
 	new_title_node.id = tab_id+"_title";
+	new_title_node.className = "title";
 
-	if (tab_title.length > 30)
-	{
-		tab_title_replacement = tab_title.substring(0, 27)+"...";
-		new_title_node.appendChild(document.createTextNode(tab_title_replacement));
-	}
-	else
-	{
-		new_title_node.appendChild(document.createTextNode(tab_title));
-	}
+	new_title_node.appendChild(document.createTextNode(tab_title));
 
 	tab_element.replaceChild(new_title_node, old_title_node);
 	$("#"+tab_id+"_activate").click(function() {

@@ -91,4 +91,7 @@ span.normal {
 	border-bottom-color: black;
 	border-bottom-left-radius: 12px;
 }
+
+span.title {
+	text-overflow: ellipsis;
 }
