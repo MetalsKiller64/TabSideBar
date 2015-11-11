@@ -27,9 +27,10 @@ function store_tab_infos()
 	var tab_references = {};
 	for (let tab of tabs)
 	{
-		tab_references[tab.index] = {"access_id":tab.access_id, "parent":tab.parent_id};
+		tab_references[tab.index] = tab.access_id;
 	}
 	store.storage.tab_references = tab_references;
+	store.storage.tree = tree;
 	console.log(tab_references);
 }
 
@@ -49,10 +50,11 @@ var sidebar = require("sdk/ui/sidebar").Sidebar({
 	onAttach: function (worker) {
 		open_tabs = {};
 		tab_ids = [];
-		if (store.storage.tab_references != undefined)
+		if (store.storage.tab_references != undefined && store.storage.tree != undefined)
 		{
-			console.log("restore tab relations: "+store.storage.tab_references);
+			console.log("restore tab references: "+store.storage.tab_references);
 			restored_tabs = store.storage.tab_references;
+			tree = store.storage.tree;
 		}
 		worker.port.on("ping", function() {
 			worker.port.emit("pong");
@@ -320,19 +322,17 @@ function list_tabs()
 	var first_tab = undefined;
 	for (let tab of tabs)
 	{
-		/*if (restored_tabs != undefined)
+		if (restored_tabs != undefined)
 		{
 			console.log("restore")
 			if (restored_tabs[tab.index] != undefined)
 			{
-				var restored_tab = restored_tabs[tab.index]
-				tab.parent_id = restored_tab["parent"];
-				tab.width = restored_tab["width"];
-				tab.access_id = restored_tab["access_id"];
+				var restored_tab_id = restored_tabs[tab.index]
+				tab.access_id = restored_tab_id;
 				tab_ids.push(tab.access_id);
 				open_tabs[tab.access_id] = tab;
 			}
-		}*/
+		}
 
 		if (tab.access_id == undefined)
 		{
