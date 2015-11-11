@@ -59,6 +59,31 @@ var sidebar = require("sdk/ui/sidebar").Sidebar({
 			sidebar_worker = worker;
 			list_tabs();
 		});
+		worker.port.on("tab_added", function() 
+		{
+			if (tabs_to_add.length == 0)
+			{
+				highlight_tab(tabs.activeTab.access_id);
+			}
+			else
+			{
+				var next_tab_id = tabs_to_add.shift();
+				var next_tab = undefined;
+				for (let tab of tabs)
+				{
+					if (tab.access_id == next_tab_id)
+					{
+						if (!(tab.access_id in tree))
+						{
+							add_to_tree(tab.access_id, [], null);
+						}
+						next_tab = tab;
+						break;
+					}
+				}
+				add_tab(next_tab, "initial");
+			}
+		});
 		worker.port.on("click", function (id) {
 			activate_clicked_tab(id);
 			highlight_tab(id);
