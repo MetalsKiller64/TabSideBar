@@ -70,6 +70,10 @@ span.highlighted {
 	-moz-user-select: none;
 	cursor: default;
 	float: right;
+	border-bottom-style: ridge;
+	border-bottom-width: thin;
+	border-bottom-color: black;
+	border-bottom-left-radius: 12px;
 }
 
 span.normal {
@@ -82,4 +86,9 @@ span.normal {
 	-moz-user-select: none;
 	cursor: default;
 	float: right;
+	border-bottom-style: ridge;
+	border-bottom-width: thin;
+	border-bottom-color: black;
+	border-bottom-left-radius: 12px;
+}
 }
