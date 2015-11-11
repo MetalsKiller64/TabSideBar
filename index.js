@@ -132,7 +132,7 @@ function add_to_tree(tab_id, children, parent_id)
 	}
 }
 
-function remove_from_tree(tab_id, parent_id)
+function remove_from_tree(tab_id)
 {
 	console.log("tree:");
 	for (key in tree)
@@ -141,20 +141,32 @@ function remove_from_tree(tab_id, parent_id)
 		console.log(tree[key]);
 	}
 
-	var index = tree.indexOf(tab_id);
-	tree[parent_id]["children"].splice(index, 1)
-	var new_parent = tree[parent_id]["children"][0];
-	var new_children = tree[new_parent]["children"]
-	var content = tree[tab_id];
-	var old_children = content["children"];
-	if (new_children.length != 0)
+	var parent_id = tree[tab_id]["parent"];
+
+	//TODO: der code ist noch buggy, soll aber kind-tabs des geschlossenen nach oben rücken
+	/*
+	if (parent_id != null)
 	{
-		//TODO: einrückung der kinder rekursiv um 1 erhöhen
-		content["children"] = new_children.push.apply(old_children);
-	}
-	tree[new_parent] = content;
-	var old_indentation_level = tree[new_parent]["indentation_level"];
-	tree[new_parent]["indentation_level"] = (old_indentation_level + 1);
+		var index = tree[parent_id]["children"].indexOf(tab_id);
+		tree[parent_id]["children"].splice(index, 1);
+		var new_parent = tree[parent_id]["children"][0];
+		var new_children = tree[new_parent]["children"]
+		var content = tree[tab_id];
+		
+		if (content["children"].length != 0)
+		{
+			var old_children = content["children"];
+			if (new_children.length != 0)
+			{
+				//TODO: einrückung der kinder rekursiv um 1 erhöhen
+				content["children"] = new_children.push.apply(old_children);
+			}
+			tree[new_parent] = content;
+			var old_indentation_level = tree[new_parent]["indentation_level"];
+			tree[new_parent]["indentation_level"] = (old_indentation_level + 1);
+		}
+	}*/
+
 	tree[tab_id] = undefined;
 
 	console.log("tree:");
