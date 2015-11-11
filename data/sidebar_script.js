@@ -109,6 +109,7 @@ addon.port.on("add_tab", function (tab) {
 
 	$("#"+tab_id+"_close").click(function() {
 		var id=$(this).attr('id').split("_")[0];
+		$("#"+tab_id).unbind("click");
 		addon.port.emit("close", id);
 	})
 
