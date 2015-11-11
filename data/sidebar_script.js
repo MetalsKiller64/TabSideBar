@@ -39,36 +39,16 @@ addon.port.on("add_tab", function (tab) {
 	var tab_id = tab["id"];
 	var tab_title = tab["title"];
 	var subsequent_tab = tab["sub_tab"];
-	var highlight_as_current = tab["highlight"];
+	var indentation_level = tab["indentation_level"];
 
 	var tab_container = document.createElement("span");
 	tab_container.id = tab_id;
 	tab_container.className = "normal";
 
-	if (tab["parent"] != undefined)
-	{
-		if (document.getElementById(tab["parent"]) == undefined)
-		{
-			console.log("parent is not ready yet");
-		}
-		else
-		{
-			//var parent_indentation = document.getElementById(tab["parent"]).style["margin-left"];
-			var parent_indentation = document.getElementById(tab["parent"]).style["width"].substring(0,2);
-			if (parent_indentation == "")
-			{
-				tab_container.style = "width: 98%";
-			}
-			else
-			{
-				//var indentation = ((parseInt(parent_indentation.substring(0,1)) + 1).toString() + "0");
-				var indentation = (parseInt(parent_indentation) - 2);
-				console.log("indentation: "+indentation);
-				tab_container.style = "width: "+indentation+"%;";
-				//tab_container.style = "margin-left: "+indentation+"px;";
-			}
-		}
-	}
+	indentation = (2 * indentation_level);
+	console.log("indentation: "+indentation);
+	tab_container.style = "width: "+(100 - indentation)+"%";
+	console.log(tab_container.style.width);
 	
 	var tab_icon = document.createElement("img");
 	tab_icon.id = tab_id+"_icon";
@@ -94,7 +74,6 @@ addon.port.on("add_tab", function (tab) {
 	tab_container.appendChild(document.createElement("br"));
 	if (subsequent_tab != undefined)
 	{
-		//tab_list.insertBefore(tab_container, document.getElementById(subsequent_tab));
 		$("#"+subsequent_tab).before(tab_container);
 	}
 	else
@@ -113,10 +92,7 @@ addon.port.on("add_tab", function (tab) {
 		addon.port.emit("close", id);
 	})
 
-	if (highlight_as_current != undefined)
-	{
-		highlight(highlight_as_current);
-	}
+	addon.port.emit("tab_added");
 });
 
 addon.port.on("update_tab", function (tab) {
@@ -152,7 +128,6 @@ addon.port.on("update_tab", function (tab) {
 		addon.port.emit("close", id);
 	});
 
-	//highlight(tab_id);
 });
 
 addon.port.on("remove_tab", function (tab) {
