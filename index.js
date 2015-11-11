@@ -224,7 +224,13 @@ function add_tab(tab, type)
 
 	if (type == "new")
 	{
-		new_id = tab_ids.length;
+		//new_id = tab_ids.length;
+		new_id = parseInt(Math.random() * (999999999 - 0));
+		console.log(new_id);
+		if (new_id in tab_ids)
+		{
+			new_id = new_id+"_"+tab_ids.length;
+		}
 		tab_ids.push(new_id);
 		open_tabs[new_id] = tab;
 		tab.access_id = new_id;
@@ -322,7 +328,13 @@ function list_tabs()
 
 		if (tab.access_id == undefined)
 		{
-			new_id = tab_ids.length;
+			//new_id = tab_ids.length;
+			new_id = parseInt(Math.random() * (999999999 - 0));
+			console.log(new_id);
+			if (new_id in tab_ids)
+			{
+				new_id = new_id+"_"+tab_ids.length;
+			}
 			tab_ids.push(new_id);
 			open_tabs[new_id] = tab;
 			tab.access_id = new_id;
