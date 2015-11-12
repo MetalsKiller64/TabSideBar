@@ -218,15 +218,6 @@ tabs.on("activate", function (tab) {
 	}
 });
 
-tabs.on("close", function (tab) {
-	if (sidebar_worker == undefined)
-	{
-		return;
-	}
-	console.log("EVENT: close");
-	remove_tab(tab);
-});
-
 function close_tab(id)
 {
 	var tab = open_tabs[id];
