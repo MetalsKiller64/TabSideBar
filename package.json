@@ -15,5 +15,11 @@
       "title":"show sidebar after browser startup",
       "type":"bool",
       "value":true
+  },
+  {
+      "name":"clear_tree",
+      "title":"clear tree",
+      "label":"clear",
+      "type":"control"
   }]
 }

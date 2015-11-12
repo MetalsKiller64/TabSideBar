@@ -22,6 +22,10 @@ var triggered_events_at_once = 0;
 
 var tree = {};
 
+require("sdk/simple-prefs").on("clear_tree", function() {
+	tree = {};
+});
+
 function store_tab_infos()
 {
 	var tab_references = {};
