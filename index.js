@@ -81,7 +81,7 @@ var sidebar = require("sdk/ui/sidebar").Sidebar({
 					{
 						if (!(tab.access_id in tree))
 						{
-							add_to_tree(tab.access_id, [], null);
+							add_to_tree(tab.access_id, null);
 						}
 						next_tab = tab;
 						break;
@@ -112,7 +112,7 @@ function highlight_tab(tab_id)
 	sidebar_worker.port.emit("highlight", tab_id);
 }
 
-function add_to_tree(tab_id, children, parent_id)
+function add_to_tree(tab_id, parent_id)
 {
 	console.log("tree:");
 	for (key in tree)
@@ -121,11 +121,18 @@ function add_to_tree(tab_id, children, parent_id)
 		console.log(tree[key]);
 	}
 
-	tree[tab_id] = {"children": children, "parent":parent_id, "indentation_level":0};
+	tree[tab_id] = {"children": [], "parent":parent_id, "indentation_level":0};
 	if (parent_id != null)
 	{
-		tree[tab_id]["indentation_level"] = (tree[parent_id]["indentation_level"] + 1);
-		tree[parent_id]["children"].unshift(tab_id);
+		if (!(parent_id in tree))
+		{
+			tree[tab_id]["indentation_level"] = 0;
+		}
+		else
+		{
+			tree[tab_id]["indentation_level"] = (tree[parent_id]["indentation_level"] + 1);
+			tree[parent_id]["children"].push(tab_id);
+		}
 	}
 	
 	console.log("tree:");
@@ -254,16 +261,21 @@ function add_tab(tab, type)
 		{
 			if (parent_tab_parent_id == null)
 			{
-				add_to_tree(tab.access_id, [], null);
+				console.log("NO PARENT");
+				add_to_tree(tab.access_id, null);
 			}
 			else
 			{
-				add_to_tree(tab.access_id, [], parent_tab_parent_id);
+				console.log("PARENT OF PARENT");
+				add_to_tree(tab.access_id, parent_tab_parent_id);
 			}
 		}
 		else
 		{
-			add_to_tree(tab.access_id, [], parent_tab.access_id);
+			console.log("PARENT");
+			add_to_tree(tab.access_id, parent_tab.access_id);
+			console.log("added: ");
+			console.log(tree[tab.access_id]);
 		}
 
 		var subsequent_tab = undefined;
@@ -354,7 +366,7 @@ function list_tabs()
 			first_tab = tab;
 			if (!(tab.access_id in tree))
 			{
-				add_to_tree(tab.access_id, [], null);
+				add_to_tree(tab.access_id, null);
 			}
 		}
 		else
