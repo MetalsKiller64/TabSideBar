@@ -221,14 +221,7 @@ tabs.on("activate", function (tab) {
 function close_tab(id)
 {
 	var tab = open_tabs[id];
-	for (let open_tab of tabs)
-	{
-		if (tab.access_id == id)
-		{
-			tab = open_tab;
-		}
-	}
-	remove_from_tree(tab.access_id);
+	remove_tab(tab);
 	tab.close();
 }
 
@@ -318,8 +311,10 @@ function update_tab(tab, id)
 
 function remove_tab(tab)
 {
-	open_tabs[tab.access_id] = undefined;
-	sidebar_worker.port.emit("remove_tab", {"id":tab.access_id, "title":tab.title});
+	tab_id = tab.access_id;
+	open_tabs[tab_id] = undefined;
+	remove_from_tree(tab_id);
+	sidebar_worker.port.emit("remove_tab", {"id":tab_id, "title":tab.title});
 }
 
 function list_tabs()
