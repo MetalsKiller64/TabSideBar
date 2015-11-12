@@ -21,6 +21,7 @@ var restored_tabs = undefined;
 var triggered_events_at_once = 0;
 
 var tree = {};
+var last_close = undefined;
 
 require("sdk/simple-prefs").on("clear_tree", function() {
 	tree = {};
@@ -96,7 +97,12 @@ var sidebar = require("sdk/ui/sidebar").Sidebar({
 		});
 
 		worker.port.on("close", function (id) {
-			close_tab(id);
+			console.log("MAIN CLOSE: "+id);
+			if (id != last_close)
+			{
+				close_tab(id);
+				last_close = id;
+			}
 		})
 	}
 });
