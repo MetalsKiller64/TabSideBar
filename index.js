@@ -151,7 +151,7 @@ function add_to_tree(tab_id, parent_id)
 
 function remove_from_tree(tab_id)
 {
-	console.log("tree:");
+	console.log("remove "+tab_id+", tree:");
 	for (key in tree)
 	{
 		console.log(key)
@@ -159,34 +159,58 @@ function remove_from_tree(tab_id)
 	}
 
 	var parent_id = tree[tab_id]["parent"];
+	console.log("PARENT ID: "+parent_id);
+	console.log("TREE OBJECT: ");
+	console.log(tree[tab_id]);
 
 	//TODO: der code ist noch buggy, soll aber kind-tabs des geschlossenen nach oben rücken
-	/*
-	if (parent_id != null)
+	if (tree[tab_id]["children"].length > 0)
 	{
-		var index = tree[parent_id]["children"].indexOf(tab_id);
-		tree[parent_id]["children"].splice(index, 1);
-		var new_parent = tree[parent_id]["children"][0];
-		var new_children = tree[new_parent]["children"]
-		var content = tree[tab_id];
-		
-		if (content["children"].length != 0)
+		if (parent_id != null)
 		{
+			console.log("parent_id: ");
+			console.log(parent_id);
+			var index = tree[parent_id]["children"].indexOf(tab_id);
+			tree[parent_id]["children"].splice(index, 1);
+			var replace_parent = tree[parent_id]["children"][0];
+		}
+		else
+		{
+			var replace_parent = tree[tab_id]["children"][0];
+		}
+
+		console.log("replace parent: ");
+		console.log(replace_parent);
+		if (replace_parent != undefined)
+		{
+			var replace_children = tree[replace_parent]["children"];
+			var content = tree[tab_id];
 			var old_children = content["children"];
-			if (new_children.length != 0)
+			for (var child_index in old_children)
+			{
+				var child_id = old_children[child_index];
+				console.log("child: "+child_id);
+				var child = tree[child_id];
+				child["parent"] = replace_parent;
+			}
+
+			if (replace_children.length != 0)
 			{
 				//TODO: einrückung der kinder rekursiv um 1 erhöhen
-				content["children"] = new_children.push.apply(old_children);
+				content["children"] = replace_children.push.apply(old_children);
 			}
-			tree[new_parent] = content;
-			var old_indentation_level = tree[new_parent]["indentation_level"];
-			tree[new_parent]["indentation_level"] = (old_indentation_level + 1);
+
+			var old_indentation_level = tree[replace_parent]["indentation_level"];
+			content["indentation_level"] = (old_indentation_level - 1);
+			content["parent"] = parent_id;
+			tree[replace_parent] = content;
+			console.log("replace: "+tree[replace_parent]);
 		}
-	}*/
+	}
 
-	tree[tab_id] = undefined;
+	delete tree[tab_id];
 
-	console.log("tree:");
+	console.log("removed, tree:");
 	for (key in tree)
 	{
 		console.log(key)
