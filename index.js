@@ -341,6 +341,8 @@ function add_tab(tab, type)
 			sidebar_worker.port.emit("add_tab", tab_object);
 		}
 	});
+
+	store_tab_infos();
 }
 
 function update_tab(tab, id)
@@ -366,6 +368,7 @@ function remove_tab(tab)
 	open_tabs[tab_id] = undefined;
 	remove_from_tree(tab_id);
 	sidebar_worker.port.emit("remove_tab", {"id":tab_id, "title":tab.title});
+	store_tab_infos();
 }
 
 function list_tabs()
