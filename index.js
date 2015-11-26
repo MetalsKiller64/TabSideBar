@@ -1,4 +1,4 @@
-//TODO: baumstruktur?
+//FIXME: bei session restore werden die wiederhergestellten tabs alle als children des ersten tabs re-added
 //TODO: drag & drop?
 //FIXME: tab-titel werden nicht aktualisiert wenn man auf "zurück" klickt
 //FIXME: tab titel aktualisierung funktioniert nicht immer z.B. bei aktualisierung von suchmaschinen ergebnissen
@@ -39,19 +39,11 @@ function store_tab_infos()
 	console.log(tab_references);
 }
 
-exports.onUnload = function (reason) {
-	store_tab_infos();
-};
-
 var sidebar = require("sdk/ui/sidebar").Sidebar({
 	id: 'tabbar',
 	title: 'TabSideBar',
 	url: data.url("sidebar_content.html"),
 	contentScriptFile: [data.url("jquery.min.js")],
-	onHide: function () {
-		console.log("hiding");
-		store_tab_infos();
-	},
 	onAttach: function (worker) {
 		open_tabs = {};
 		tab_ids = [];
