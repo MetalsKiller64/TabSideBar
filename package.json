@@ -1,7 +1,7 @@
 {
   "title": "TabSideBar",
   "name": "tabsidebar",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "description": "simple sidebar for tabs",
   "main": "index.js",
   "author": "MetalsKiller64",
